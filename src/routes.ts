@@ -9,8 +9,9 @@ export const registerRoutes = (fastify: FastifyInstance) => {
     })
 
     fastify.get('/function', async (request, reply) => {
-        // const functionController = new FunctionController('./src/function.yaml')
-        // reply.send(functionController.tools)
+        const functionController = new FunctionController('./src/function.json')
+        functionController.executeFunction('rdvsindex', `{"RDV_DEBUT": "2024-11-18", "RDV_FIN": "2024-11-24"}`)
+        // reply.send(functionController)
     })
 
 

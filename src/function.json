@@ -1,0 +1,4270 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lolapp",
+    "version": "0.0.1",
+    "description": "Api Lolapp"
+  },
+  "servers": [
+    {
+      "url": "https://api.lola-france.fr",
+      "description": "Dev"
+    }
+  ],
+  "paths": {
+    "/clients": {
+      "get": {
+        "operationId": "clients.index",
+        "description": "Retourne la liste des clients correspondant aux critères de recherche.",
+        "summary": "Recherche des clients",
+        "tags": [
+          "Client"
+        ],
+        "parameters": [
+          {
+            "name": "NOM",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "PRENOM",
+            "in": "query",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "VILLE",
+            "in": "query",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `ClientResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "post": {
+        "operationId": "clients.store",
+        "description": "Créer un client avec son premier projet.⚠️Cannot generate request documentation: method_exists(): Argument #1 ($object_or_class) must be of type object|string, array given",
+        "summary": "Créer un client",
+        "tags": [
+          "Client"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "operationId": "clients.show",
+        "description": "Retourne les informations d'un client.",
+        "summary": "Details d'un client",
+        "tags": [
+          "Client"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`ClientResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Client non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "clients.update",
+        "description": "Mettre à jour les informations d'un client.",
+        "summary": "Mettre à jour un client",
+        "tags": [
+          "Client"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`ClientResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Client non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "clients.destroy",
+        "summary": "Supprimer un client",
+        "tags": [
+          "Client"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`ClientResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Client non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drive/search": {
+      "post": {
+        "operationId": "drive.searchFiles",
+        "summary": "Recherche des fichiers",
+        "tags": [
+          "Drive"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "per_page": {
+                    "type": "integer"
+                  },
+                  "sort_field": {
+                    "type": "string"
+                  },
+                  "sort_direction": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string"
+                  },
+                  "end_date": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/equipe/localisation/rdv": {
+      "get": {
+        "operationId": "equipe.localisationPersonnelRendezVous",
+        "description": "Localisation des personnels en rendez-vous",
+        "summary": "Localisation rendez-vous",
+        "tags": [
+          "Equipe"
+        ],
+        "parameters": [
+          {
+            "name": "time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `RdvResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RdvResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/equipe/localisation/intervention": {
+      "get": {
+        "operationId": "equipe.localisationPersonnelIntervention",
+        "description": "Localisation des personnels en intervention",
+        "summary": "Localisation intervention",
+        "tags": [
+          "Equipe"
+        ],
+        "parameters": [
+          {
+            "name": "time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `EquipeInterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EquipeInterventionResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/interventions": {
+      "get": {
+        "operationId": "interventions.index",
+        "description": "Disponnible pour les techniciens ou commercials",
+        "summary": "Liste des interventions",
+        "tags": [
+          "Intervention"
+        ],
+        "parameters": [
+          {
+            "name": "DATE_DEBUT",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DATE_FIN",
+            "in": "query",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "ALL",
+            "in": "query",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `InterventionListResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InterventionListResource"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vous n'avez pas les droits pour accéder à cette ressource"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "post": {
+        "operationId": "interventions.store",
+        "summary": "Création d'une intervention",
+        "tags": [
+          "Intervention"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterventionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`InterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterventionResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur lors de la création de l'intervention"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interventions/{id}": {
+      "get": {
+        "operationId": "interventions.show",
+        "summary": "Détail d'une intervention",
+        "tags": [
+          "Intervention"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`InterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterventionResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "interventions.destroy",
+        "summary": "Suppression d'une intervention",
+        "tags": [
+          "Intervention"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`InterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterventionResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Intervention non trouvée"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/interventions/{id_intervention}": {
+      "put": {
+        "operationId": "interventions.update",
+        "summary": "Mise à jour d'une intervention",
+        "tags": [
+          "Intervention"
+        ],
+        "parameters": [
+          {
+            "name": "id_intervention",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterventionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`InterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterventionResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/intervention/{id}/pdf": {
+      "post": {
+        "operationId": "intervention.generatePDF",
+        "summary": "Génération du PV d'une intervention",
+        "tags": [
+          "Intervention"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "IDINTERVENTION": {
+                    "type": "integer"
+                  },
+                  "nature": {
+                    "type": "string"
+                  },
+                  "signDate": {
+                    "type": "string"
+                  },
+                  "signImage": {
+                    "type": "string"
+                  },
+                  "signImageTec": {
+                    "type": "string"
+                  },
+                  "checkboxes": {
+                    "type": "string"
+                  },
+                  "finishing": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "IDINTERVENTION"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/intervention/send": {
+      "post": {
+        "operationId": "intervention.sendPvEmail",
+        "summary": "Envoi du PV par email",
+        "tags": [
+          "Intervention"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recipientName": {
+                    "type": "string"
+                  },
+                  "senderName": {
+                    "type": "string"
+                  },
+                  "fileContent": {
+                    "type": "string",
+                    "format": "binary",
+                    "maxLength": 2048
+                  },
+                  "recipientEmails": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipientName",
+                  "senderName",
+                  "fileContent",
+                  "recipientEmails"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email has been send"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/intervention_feedback/good/{id}": {
+      "post": {
+        "operationId": "interventionFeedback.finaliseGood",
+        "summary": "Finalisation intervention",
+        "tags": [
+          "InterventionFeedback"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterventionFeedbackGood"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Array of `InterventionResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InterventionResource"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Pas d'intervention trouvé"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/intervention_feedback/bad/{id}": {
+      "post": {
+        "operationId": "interventionFeedback.finaliseBad",
+        "summary": "Finalisation intervention en cas de problème",
+        "tags": [
+          "InterventionFeedback"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterventionFeedbackBad"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "new_intervention": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "bc_fourn_created": {
+                      "type": "boolean"
+                    },
+                    "bc_fourn_details": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/BcFourn"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "new_intervention",
+                    "bc_fourn_created",
+                    "bc_fourn_details"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/natures-rdv": {
+      "get": {
+        "operationId": "natures-rdv.index",
+        "tags": [
+          "NatureRdv"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "natures-rdv.store",
+        "tags": [
+          "NatureRdv"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/natures-rdv/{natures_rdv}": {
+      "get": {
+        "operationId": "natures-rdv.show",
+        "tags": [
+          "NatureRdv"
+        ],
+        "parameters": [
+          {
+            "name": "natures_rdv",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "natures-rdv.update",
+        "tags": [
+          "NatureRdv"
+        ],
+        "parameters": [
+          {
+            "name": "natures_rdv",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "natures-rdv.destroy",
+        "tags": [
+          "NatureRdv"
+        ],
+        "parameters": [
+          {
+            "name": "natures_rdv",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/personnels": {
+      "get": {
+        "operationId": "personnels.index",
+        "tags": [
+          "Personnel"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `PersonnelAdminResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonnelAdminResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "personnels.store",
+        "tags": [
+          "Personnel"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonnelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`PersonnelResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonnelResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/personnels/{id}": {
+      "get": {
+        "operationId": "personnels.show",
+        "tags": [
+          "Personnel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`PersonnelAdminResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonnelAdminResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "personnels.update",
+        "tags": [
+          "Personnel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonnelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`PersonnelAdminResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonnelAdminResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "personnels.destroy",
+        "tags": [
+          "Personnel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Personnel supprimé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projets/{id}/cancel": {
+      "get": {
+        "operationId": "projet.cancel",
+        "summary": "Annuler un projet",
+        "tags": [
+          "Projet"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ID_MOTIF_SANS_SUITE",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/projets": {
+      "get": {
+        "operationId": "projets.index",
+        "summary": "Liste des projets",
+        "tags": [
+          "Projet"
+        ],
+        "parameters": [
+          {
+            "name": "TYPE",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "assignment",
+                "to_contact",
+                "without_rdv",
+                "without_quote",
+                "with_quote",
+                "with_signed_quote",
+                "without_continuation",
+                "to_relaunch",
+                "all"
+              ]
+            }
+          },
+          {
+            "name": "DATE_DEBUT",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DATE_FIN",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ALL",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjetResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "post": {
+        "operationId": "projets.store",
+        "summary": "Creer un projet pour un client existant",
+        "tags": [
+          "Projet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjetStoreRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/projets/{id}": {
+      "get": {
+        "operationId": "projets.show",
+        "summary": "Afficher un projet",
+        "tags": [
+          "Projet"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Projet non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "projets.update",
+        "summary": "Mettre à jour un projet",
+        "tags": [
+          "Projet"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "IDORIGINE": {
+                    "type": "integer"
+                  },
+                  "DESCRIPTION": {
+                    "type": "string"
+                  },
+                  "IDCLIENT": {
+                    "type": "integer"
+                  },
+                  "OBSERVATION": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 255
+                  },
+                  "IDETAT_PROJET": {
+                    "type": "integer"
+                  },
+                  "RELANCE_INTERMEDIAIRE": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ADRESSE_FACTURATION": {
+                    "type": "object",
+                    "properties": {
+                      "VILLE": {
+                        "type": "string"
+                      },
+                      "CODE_POSTAL": {
+                        "type": "string"
+                      },
+                      "ADRESSE_COMPLETE": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "CODE_ACCES": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "ADRESSE_CHANTIER": {
+                    "type": "object",
+                    "properties": {
+                      "VILLE": {
+                        "type": "string"
+                      },
+                      "CODE_POSTAL": {
+                        "type": "string"
+                      },
+                      "ADRESSE_COMPLETE": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "CODE_ACCES": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Adresse non trouvé"
+                        }
+                      },
+                      "required": [
+                        "message"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Projet non trouvé"
+                        }
+                      },
+                      "required": [
+                        "message"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "projets.destroy",
+        "summary": "Supprimer un projet",
+        "tags": [
+          "Projet"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`ProjetResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/devis": {
+      "get": {
+        "operationId": "devis.index",
+        "tags": [
+          "Quote"
+        ],
+        "parameters": [
+          {
+            "name": "DATE_DEBUT",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DATE_FIN",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "TYPE",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "attente",
+                "classement"
+              ]
+            }
+          },
+          {
+            "name": "ALL",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `QuoteResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuoteResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "post": {
+        "operationId": "devis.store",
+        "tags": [
+          "Quote"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`QuoteResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/devis/{id}": {
+      "get": {
+        "operationId": "devis.show",
+        "tags": [
+          "Quote"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`QuoteResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "devis.update",
+        "tags": [
+          "Quote"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`QuoteResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Devis non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "devis.destroy",
+        "tags": [
+          "Quote"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`QuoteResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Devis non trouvé"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ranking": {
+      "get": {
+        "operationId": "ranking.index",
+        "tags": [
+          "Ranking"
+        ],
+        "parameters": [
+          {
+            "name": "DATE_DEBUT",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DATE_FIN",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `RankingResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RankingResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      }
+    },
+    "/rdvs": {
+      "get": {
+        "operationId": "rdvs.index",
+        "tags": [
+          "Rdv"
+        ],
+        "parameters": [
+          {
+            "name": "RDV_DEBUT",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "RDV_FIN",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "RDV_OBJET",
+            "in": "query",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 250
+            }
+          },
+          {
+            "name": "IDADRESSE",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "OBSERVATIONS",
+            "in": "query",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 250
+            }
+          },
+          {
+            "name": "IDNATURE_RDV",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "IDPROJET",
+            "in": "query",
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of `RdvResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RdvResource"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "rdvs.store",
+        "tags": [
+          "Rdv"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RdvRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RdvResource"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rdvs/{id}": {
+      "get": {
+        "operationId": "rdvs.show",
+        "tags": [
+          "Rdv"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`RdvResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RdvResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "rdv introuvable"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rdvs/{idRDV}": {
+      "put": {
+        "operationId": "rdvs.update",
+        "tags": [
+          "Rdv"
+        ],
+        "parameters": [
+          {
+            "name": "idRDV",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RdvRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`RdvResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RdvResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "rdv introuvable"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationException"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "rdvs.destroy",
+        "tags": [
+          "Rdv"
+        ],
+        "parameters": [
+          {
+            "name": "idRDV",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`RdvResource`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RdvResource"
+                    },
+                    {
+                      "type": "string",
+                      "example": "rdv introuvable"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "http": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": ""
+      }
+    },
+    "schemas": {
+      "AdresseResource": {
+        "type": "object",
+        "properties": {
+          "IDADRESSE": {
+            "type": "string"
+          },
+          "ADRESSE_COMPLETE": {
+            "type": "string"
+          },
+          "ADRESSE": {
+            "type": "string"
+          },
+          "CODE_POSTAL": {
+            "type": "string"
+          },
+          "VILLE": {
+            "type": "string"
+          },
+          "PAYS": {
+            "type": "string"
+          },
+          "LATITUDE": {
+            "type": "string"
+          },
+          "LONGITUDE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDADRESSE",
+          "ADRESSE_COMPLETE",
+          "ADRESSE",
+          "CODE_POSTAL",
+          "VILLE",
+          "PAYS",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "title": "AdresseResource"
+      },
+      "AgenceResource": {
+        "type": "object",
+        "properties": {
+          "IDAGENCE": {
+            "type": "string"
+          },
+          "NOM_AGENCE": {
+            "type": "string"
+          },
+          "ADRESSE": {
+            "type": "string"
+          },
+          "CODE_POSTAL": {
+            "type": "string"
+          },
+          "VILLE": {
+            "type": "string"
+          },
+          "TELEPHONE": {
+            "type": "string"
+          },
+          "FAX": {
+            "type": "string"
+          },
+          "EMAIL": {
+            "type": "string"
+          },
+          "NUM_SIRET": {
+            "type": "string"
+          },
+          "SOCIETE": {
+            "type": "string"
+          },
+          "COORDONNES": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2,
+            "additionalItems": false
+          }
+        },
+        "required": [
+          "IDAGENCE",
+          "NOM_AGENCE",
+          "ADRESSE",
+          "CODE_POSTAL",
+          "VILLE",
+          "TELEPHONE",
+          "FAX",
+          "EMAIL",
+          "NUM_SIRET",
+          "SOCIETE",
+          "COORDONNES"
+        ],
+        "title": "AgenceResource"
+      },
+      "AgenceSocieteResource": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 0,
+        "maxItems": 0,
+        "additionalItems": false,
+        "title": "AgenceSocieteResource"
+      },
+      "AssetsItemCustomResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "assets_item_id": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "description": "'assets_item' => new AssetsItemResource($this->whenLoaded('assets_item')),"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CompanyResource"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "assets_item_id",
+          "customer_id",
+          "content"
+        ],
+        "title": "AssetsItemCustomResource"
+      },
+      "AssetsItemResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "validation": {
+            "type": "string"
+          },
+          "assets_type": {
+            "$ref": "#/components/schemas/AssetsTypeResource"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "type_id",
+          "content",
+          "validation"
+        ],
+        "title": "AssetsItemResource"
+      },
+      "AssetsTypeResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "type",
+          "format"
+        ],
+        "title": "AssetsTypeResource"
+      },
+      "BcFourn": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 0,
+        "maxItems": 0,
+        "additionalItems": false,
+        "title": "BcFourn"
+      },
+      "ClientRequest": {
+        "type": "object",
+        "properties": {
+          "IDCIVILITE": {
+            "type": "integer"
+          },
+          "NOM": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "PRENOM": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "OBSERVATION": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "MAIL": {
+            "type": "string",
+            "format": "email"
+          },
+          "IDADRESSE": {
+            "type": "integer"
+          },
+          "MAIL2": {
+            "type": "string",
+            "format": "email"
+          },
+          "PORTABLE": {
+            "type": "string"
+          },
+          "PORTABLE2": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "LIBELLE_MAIL": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "LIBELLE_MAIL2": {
+            "type": "string",
+            "maxLength": 50
+          }
+        },
+        "title": "ClientRequest"
+      },
+      "ClientResource": {
+        "type": "object",
+        "properties": {
+          "IDCLIENT": {
+            "type": "string"
+          },
+          "IDCIVILITE": {
+            "type": "string"
+          },
+          "NOM": {
+            "type": "string"
+          },
+          "PRENOM": {
+            "type": "string"
+          },
+          "NOM_COMPLET": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "MAIL": {
+            "type": "string"
+          },
+          "IDADRESSE": {
+            "type": "string"
+          },
+          "PORTABLE": {
+            "type": "string"
+          },
+          "LIBELLE_PORTABLE": {
+            "type": "string"
+          },
+          "PORTABLE2": {
+            "type": "string"
+          },
+          "LIBELLE_PORTABLE2": {
+            "type": "string"
+          },
+          "IDPERSONNEL": {
+            "type": "string"
+          },
+          "ADRESSE": {
+            "$ref": "#/components/schemas/AdresseResource"
+          },
+          "PROJETS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjetResource"
+            }
+          }
+        },
+        "required": [
+          "IDCLIENT",
+          "IDCIVILITE",
+          "NOM",
+          "PRENOM",
+          "NOM_COMPLET",
+          "OBSERVATION",
+          "MAIL",
+          "IDADRESSE",
+          "PORTABLE",
+          "LIBELLE_PORTABLE",
+          "PORTABLE2",
+          "LIBELLE_PORTABLE2",
+          "IDPERSONNEL"
+        ],
+        "title": "ClientResource"
+      },
+      "CompanyResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "apikey": {
+            "type": "string"
+          },
+          "webservice": {
+            "type": "string"
+          },
+          "database_server": {
+            "type": "string"
+          },
+          "database_name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "personnels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonnelAdminResource"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "key",
+          "apikey",
+          "webservice",
+          "database_server",
+          "database_name",
+          "color",
+          "background",
+          "logo"
+        ],
+        "title": "CompanyResource"
+      },
+      "CustomerRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "title": "CustomerRequest"
+      },
+      "EquipeInterventionResource": {
+        "type": "object",
+        "properties": {
+          "IDPERSONNEL": {
+            "type": "string"
+          },
+          "NOM": {
+            "type": "string"
+          },
+          "PRENOM": {
+            "type": "string"
+          },
+          "IDCLIENT": {
+            "type": "string"
+          },
+          "TITRE": {
+            "type": "string"
+          },
+          "ID": {
+            "type": "string"
+          },
+          "TYPE": {
+            "type": "string",
+            "example": "INTERVENTION"
+          },
+          "COORDINATES": {
+            "anyOf": [
+              {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "minItems": 2,
+                "maxItems": 2,
+                "additionalItems": false
+              },
+              {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  {
+                    "type": "integer",
+                    "example": 0
+                  }
+                ],
+                "minItems": 2,
+                "maxItems": 2,
+                "additionalItems": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "IDPERSONNEL",
+          "NOM",
+          "PRENOM",
+          "IDCLIENT",
+          "TITRE",
+          "ID",
+          "TYPE",
+          "COORDINATES"
+        ],
+        "title": "EquipeInterventionResource"
+      },
+      "FactureResource": {
+        "type": "object",
+        "properties": {
+          "IDFACTURE": {
+            "type": "string"
+          },
+          "NUMERO_FACTURE": {
+            "type": "string"
+          },
+          "IDDEVIS": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDFACTURE",
+          "NUMERO_FACTURE",
+          "IDDEVIS"
+        ],
+        "title": "FactureResource"
+      },
+      "FournisseurResource": {
+        "type": "object",
+        "properties": {
+          "IDFOURNISSEUR": {
+            "type": "string"
+          },
+          "NOM": {
+            "type": "string"
+          },
+          "IDADRESSE": {
+            "type": "string"
+          },
+          "ADRESSE": {
+            "$ref": "#/components/schemas/AdresseResource"
+          }
+        },
+        "required": [
+          "IDFOURNISSEUR",
+          "NOM",
+          "IDADRESSE"
+        ],
+        "title": "FournisseurResource"
+      },
+      "InitialDataResource": {
+        "type": "object",
+        "properties": {
+          "AGENCES": {
+            "$ref": "#/components/schemas/AgenceSocieteResource"
+          },
+          "NATURE_RDV": {
+            "type": "string"
+          },
+          "CIVILITE": {
+            "type": "string"
+          },
+          "ORIGINE": {
+            "type": "string"
+          },
+          "TYPE_ANNULATION": {
+            "type": "string"
+          },
+          "TYPE_INTERVENTION": {
+            "type": "string"
+          },
+          "TYPE_PRODUIT_GENERIQUE": {
+            "type": "string"
+          },
+          "BUCKET_SIZE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "AGENCES",
+          "NATURE_RDV",
+          "CIVILITE",
+          "ORIGINE",
+          "TYPE_ANNULATION",
+          "TYPE_INTERVENTION",
+          "TYPE_PRODUIT_GENERIQUE",
+          "BUCKET_SIZE"
+        ],
+        "title": "InitialDataResource"
+      },
+      "InterventionFeedbackBad": {
+        "type": "object",
+        "properties": {
+          "COMMENTAIRE": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "integer"
+          },
+          "IDDEVIS": {
+            "type": "integer"
+          },
+          "initial": {
+            "type": "string"
+          },
+          "next_intervention": {
+            "type": "object",
+            "properties": {
+              "OBSERVATION": {
+                "type": "string"
+              },
+              "IDTYPE_INTERVENTION": {
+                "type": "integer"
+              },
+              "NBPERSONNES": {
+                "type": "integer"
+              },
+              "NOMBRE_HEURE": {
+                "type": "integer"
+              },
+              "NOMBRE_MINUTE": {
+                "type": "integer"
+              },
+              "create_new_order": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "OBSERVATION",
+              "IDTYPE_INTERVENTION",
+              "NBPERSONNES",
+              "NOMBRE_HEURE",
+              "NOMBRE_MINUTE",
+              "create_new_order"
+            ]
+          }
+        },
+        "required": [
+          "COMMENTAIRE",
+          "IDPROJET",
+          "IDDEVIS",
+          "initial"
+        ],
+        "title": "InterventionFeedbackBad"
+      },
+      "InterventionFeedbackGood": {
+        "type": "object",
+        "properties": {
+          "COMMENTAIRE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "COMMENTAIRE"
+        ],
+        "title": "InterventionFeedbackGood"
+      },
+      "InterventionLigneDevisResource": {
+        "type": "object",
+        "properties": {
+          "IDLIGNE_DEVIS": {
+            "type": "string"
+          },
+          "IDINTERVENTION": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "IDREPLIC_INTERVENTION": {
+            "type": "string"
+          },
+          "INTERVENTION": {
+            "$ref": "#/components/schemas/InterventionResource"
+          }
+        },
+        "required": [
+          "IDLIGNE_DEVIS",
+          "IDINTERVENTION",
+          "OBSERVATION",
+          "IDREPLIC_INTERVENTION"
+        ],
+        "title": "InterventionLigneDevisResource"
+      },
+      "InterventionListResource": {
+        "type": "object",
+        "properties": {
+          "IDINTERVENTION": {
+            "type": "string"
+          },
+          "RDV_DEBUT": {
+            "type": "string"
+          },
+          "RDV_FIN": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "RAISON_HEURE_SUPP": {
+            "type": "string"
+          },
+          "DUREE_PREVU": {
+            "type": "string"
+          },
+          "IDTYPE_INTERVENTION": {
+            "type": "string"
+          },
+          "COULEUR": {
+            "type": "string"
+          },
+          "FINALISEE": {
+            "type": "string"
+          },
+          "PROCESVERBAL": {
+            "type": "string"
+          },
+          "PROJET": {
+            "$ref": "#/components/schemas/ProjetResource"
+          },
+          "ID_PERSONNELS": {
+            "type": "string"
+          },
+          "NB_PERSONNELS": {
+            "type": "string"
+          },
+          "ETAT_RDV": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDINTERVENTION",
+          "RDV_DEBUT",
+          "RDV_FIN",
+          "IDPROJET",
+          "LIBELLE",
+          "OBSERVATION",
+          "RAISON_HEURE_SUPP",
+          "DUREE_PREVU",
+          "IDTYPE_INTERVENTION",
+          "COULEUR",
+          "FINALISEE",
+          "PROCESVERBAL",
+          "PROJET",
+          "ID_PERSONNELS",
+          "NB_PERSONNELS",
+          "ETAT_RDV"
+        ],
+        "title": "InterventionListResource"
+      },
+      "InterventionRequest": {
+        "type": "object",
+        "properties": {
+          "IDPROJET": {
+            "type": "integer"
+          },
+          "IDDEVIS": {
+            "type": "integer"
+          },
+          "DATE_DE_POSE": {
+            "type": "string"
+          },
+          "SEMAINE_DE_POSE": {
+            "type": "integer"
+          },
+          "OBSERVATION": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "PROCESVERBAL": {
+            "type": "boolean"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "IDTYPE_INTERVENTION": {
+            "type": "integer"
+          },
+          "SEMAINE_DE_POSE_PREVUE": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "IDPROJET",
+          "IDDEVIS",
+          "DATE_DE_POSE",
+          "IDTYPE_INTERVENTION"
+        ],
+        "title": "InterventionRequest"
+      },
+      "InterventionResource": {
+        "type": "object",
+        "properties": {
+          "IDINTERVENTION": {
+            "type": "string"
+          },
+          "IDDEVIS": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "string"
+          },
+          "DATE_DE_POSE": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "FINALISEE": {
+            "type": "string"
+          },
+          "PROCESVERBAL": {
+            "type": "string"
+          },
+          "COULEUR": {
+            "type": "string"
+          },
+          "IDTYPE_INTERVENTION": {
+            "type": "string"
+          },
+          "PROJET": {
+            "$ref": "#/components/schemas/ProjetResource"
+          },
+          "DEVIS": {
+            "$ref": "#/components/schemas/QuoteResource"
+          },
+          "INTERVENTION_LIGNE_DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InterventionLigneDevisResource"
+            }
+          },
+          "QUINCAILLERIE_INTERVENTION": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuincaillerieInterventionResource"
+            }
+          },
+          "QUINCAILLERIE": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuincaillerieResource"
+            }
+          },
+          "ADRESSE": {
+            "$ref": "#/components/schemas/AdresseResource"
+          },
+          "FOURNISSEUR": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FournisseurResource"
+            }
+          },
+          "LIGNE_DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LigneDevisResource"
+            }
+          },
+          "TYPE_INTERVENTION": {
+            "$ref": "#/components/schemas/TypeInterventionResource"
+          }
+        },
+        "required": [
+          "IDINTERVENTION",
+          "IDDEVIS",
+          "IDPROJET",
+          "DATE_DE_POSE",
+          "OBSERVATION",
+          "LIBELLE",
+          "FINALISEE",
+          "PROCESVERBAL",
+          "COULEUR",
+          "IDTYPE_INTERVENTION"
+        ],
+        "title": "InterventionResource"
+      },
+      "LigneDevisResource": {
+        "type": "object",
+        "properties": {
+          "IDDEVIS": {
+            "type": "string",
+            "description": "'IDLIGNE_DEVIS' => $this->IDLIGNE_DEVIS,"
+          },
+          "PRIX_VENTE_HT": {
+            "type": "string"
+          },
+          "EMPLACEMENT_POSE": {
+            "type": "string"
+          },
+          "QUANTITE": {
+            "type": "string"
+          },
+          "LIBELLE_COMPLEMENTAIRE": {
+            "type": "string"
+          },
+          "COTES_COMPLEMENTAIRES": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDDEVIS",
+          "PRIX_VENTE_HT",
+          "EMPLACEMENT_POSE",
+          "QUANTITE",
+          "LIBELLE_COMPLEMENTAIRE",
+          "COTES_COMPLEMENTAIRES"
+        ],
+        "title": "LigneDevisResource"
+      },
+      "MailTemplateCustomerResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mail_template_id": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "customer": {
+            "description": "'mail_template' => new MailTemplateResource($this->whenLoaded('mail_template')),",
+            "$ref": "#/components/schemas/CompanyResource"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "carbon_copy": {
+            "type": "string"
+          },
+          "carbon_copy_invisible": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mail_template_id",
+          "customer_id",
+          "content",
+          "subject",
+          "to",
+          "carbon_copy",
+          "carbon_copy_invisible"
+        ],
+        "title": "MailTemplateCustomerResource"
+      },
+      "MailTemplateResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "place_holders": {
+            "type": "string"
+          },
+          "default_content": {
+            "type": "string"
+          },
+          "default_to": {
+            "type": "string"
+          },
+          "default_carbon_copy": {
+            "type": "string"
+          },
+          "default_carbon_copy_invisible": {
+            "type": "string"
+          },
+          "default_subject": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "place_holders",
+          "default_content",
+          "default_to",
+          "default_carbon_copy",
+          "default_carbon_copy_invisible",
+          "default_subject"
+        ],
+        "title": "MailTemplateResource"
+      },
+      "NatureRdvResource": {
+        "type": "object",
+        "properties": {
+          "IDNATURE_RDV": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "CODECOULEUR": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDNATURE_RDV",
+          "LIBELLE",
+          "CODECOULEUR"
+        ],
+        "title": "NatureRdvResource"
+      },
+      "PersonnelAdminResource": {
+        "type": "object",
+        "properties": {
+          "IDCOMPANY": {
+            "type": "string"
+          },
+          "IDPERSONNEL": {
+            "type": "string"
+          },
+          "NOM": {
+            "type": "string"
+          },
+          "PRENOM": {
+            "type": "string"
+          },
+          "NOM_COMPLET": {
+            "type": "string"
+          },
+          "MAIL": {
+            "type": "string"
+          },
+          "INITIALES": {
+            "type": "string"
+          },
+          "TELEPHONE_PORTABLE": {
+            "type": "string"
+          },
+          "MOT_DE_PASSE": {
+            "type": "string"
+          },
+          "MOT_DE_PASSE_SECURE": {
+            "type": "boolean"
+          },
+          "ROLES": {
+            "type": "string"
+          },
+          "HORS_STATS": {
+            "type": "string"
+          },
+          "IDAGENCE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDCOMPANY",
+          "IDPERSONNEL",
+          "NOM",
+          "PRENOM",
+          "NOM_COMPLET",
+          "MAIL",
+          "INITIALES",
+          "TELEPHONE_PORTABLE",
+          "MOT_DE_PASSE",
+          "MOT_DE_PASSE_SECURE",
+          "ROLES",
+          "HORS_STATS",
+          "IDAGENCE"
+        ],
+        "title": "PersonnelAdminResource"
+      },
+      "PersonnelRequest": {
+        "type": "object",
+        "properties": {
+          "NOM": {
+            "type": "string"
+          },
+          "PRENOM": {
+            "type": "string"
+          },
+          "MAIL": {
+            "type": "string",
+            "format": "email"
+          },
+          "DATE_ENTREE": {
+            "type": "string"
+          },
+          "DATE_SORTIE": {
+            "type": "string"
+          },
+          "ROLES": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "TELEPHONE_PORTABLE": {
+            "type": "string"
+          }
+        },
+        "title": "PersonnelRequest"
+      },
+      "PersonnelResource": {
+        "type": "object",
+        "properties": {
+          "IDPERSONNEL": {
+            "type": "string"
+          },
+          "NOM": {
+            "type": "string"
+          },
+          "PRENOM": {
+            "type": "string"
+          },
+          "NOM_COMPLET": {
+            "type": "string"
+          },
+          "MAIL": {
+            "type": "string"
+          },
+          "INITIALES": {
+            "type": "string"
+          },
+          "TELEPHONE_PORTABLE": {
+            "type": "string"
+          },
+          "AGENCE": {
+            "description": "'PHOTO' => $this->PHOTO !== \"data:image/png;base64,\" ? $this->PHOTO : null,",
+            "$ref": "#/components/schemas/AgenceResource"
+          },
+          "MOT_DE_PASSE_SECURE": {
+            "type": "boolean"
+          },
+          "ROLES": {
+            "type": "string"
+          },
+          "HORS_STATS": {
+            "type": "string"
+          },
+          "IDAGENCE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDPERSONNEL",
+          "NOM",
+          "PRENOM",
+          "NOM_COMPLET",
+          "MAIL",
+          "INITIALES",
+          "TELEPHONE_PORTABLE",
+          "MOT_DE_PASSE_SECURE",
+          "ROLES",
+          "HORS_STATS",
+          "IDAGENCE"
+        ],
+        "title": "PersonnelResource"
+      },
+      "ProjetResource": {
+        "type": "object",
+        "properties": {
+          "IDPROJET": {
+            "type": "string"
+          },
+          "IDADRESSECHANTIER": {
+            "type": "string"
+          },
+          "IDAGENCE": {
+            "type": "string"
+          },
+          "IDETAT_PROJET": {
+            "type": "string"
+          },
+          "NOMADE_NUMPROJET": {
+            "type": "string"
+          },
+          "DATE_CREATION": {
+            "type": "string"
+          },
+          "DESCRIPTION": {
+            "type": "string"
+          },
+          "IDCLIENT": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "IDRESPONSABLEPROJET": {
+            "type": "string"
+          },
+          "IDORIGINE": {
+            "type": "string"
+          },
+          "IDADRESSEFACTURATION": {
+            "type": "string"
+          },
+          "DATE_RELANCE": {
+            "type": "string"
+          },
+          "ID_MOTIF_SANS_SUITE": {
+            "type": "string"
+          },
+          "DATE_SANS_SUITE": {
+            "type": "string"
+          },
+          "RELANCE_INTERMEDIAIRE": {
+            "type": "string"
+          },
+          "DATE_MODIF": {
+            "type": "string"
+          },
+          "DATE_REALISE": {
+            "type": "string"
+          },
+          "TYPE_PROJET": {
+            "type": "string"
+          },
+          "REFUSE": {
+            "type": "string"
+          },
+          "RDVS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RdvResource"
+            }
+          },
+          "DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteResource"
+            }
+          },
+          "ADRESSE_CHANTIER": {
+            "$ref": "#/components/schemas/AdresseResource"
+          },
+          "ADRESSE_FACTURATION": {
+            "$ref": "#/components/schemas/AdresseResource"
+          },
+          "CLIENT": {
+            "$ref": "#/components/schemas/ClientResource"
+          },
+          "RESPONSABLE_PROJET": {
+            "$ref": "#/components/schemas/PersonnelResource"
+          },
+          "PROCHAIN_RDV": {
+            "$ref": "#/components/schemas/RdvResource"
+          },
+          "PROCHAIN_RDV_DIFFERENCE": {
+            "type": "string",
+            "examples": [
+              "22 jours"
+            ]
+          }
+        },
+        "required": [
+          "IDPROJET",
+          "IDADRESSECHANTIER",
+          "IDAGENCE",
+          "IDETAT_PROJET",
+          "NOMADE_NUMPROJET",
+          "DATE_CREATION",
+          "DESCRIPTION",
+          "IDCLIENT",
+          "OBSERVATION",
+          "IDRESPONSABLEPROJET",
+          "IDORIGINE",
+          "IDADRESSEFACTURATION",
+          "DATE_RELANCE",
+          "ID_MOTIF_SANS_SUITE",
+          "DATE_SANS_SUITE",
+          "RELANCE_INTERMEDIAIRE",
+          "DATE_MODIF",
+          "DATE_REALISE",
+          "TYPE_PROJET",
+          "REFUSE"
+        ],
+        "title": "ProjetResource"
+      },
+      "ProjetStoreRequest": {
+        "type": "object",
+        "properties": {
+          "IDORIGINE": {
+            "type": "integer",
+            "example": 1
+          },
+          "DESCRIPTION": {
+            "type": "string",
+            "example": "Description du projet"
+          },
+          "IDCLIENT": {
+            "type": "integer",
+            "example": 1
+          },
+          "OBSERVATION": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "Observations du projet",
+            "maxLength": 255
+          },
+          "RELANCE_INTERMEDIAIRE": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "Relance intermediaire"
+          },
+          "ADRESSE_FACTURATION": {
+            "type": "object",
+            "description": "Si l'aresse de facturation n'es pas fournis, l'adresse de client sera utilisé",
+            "properties": {
+              "VILLE": {
+                "type": "string",
+                "example": "Nimes"
+              },
+              "CODE_POSTAL": {
+                "type": "string",
+                "example": "30000"
+              },
+              "ADRESSE_COMPLETE": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "example": "1 rue de la paix"
+              }
+            }
+          },
+          "ADRESSE_CHANTIER": {
+            "type": "object",
+            "description": "Si l'adresse de chantier n'es pas fournis, l'adresse de client sera utilisé",
+            "properties": {
+              "VILLE": {
+                "type": "string",
+                "example": "Nimes"
+              },
+              "CODE_POSTAL": {
+                "type": "string",
+                "example": "30000"
+              },
+              "ADRESSE_COMPLETE": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "example": "1 rue de la paix"
+              },
+              "CODE_ACCES": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "example": "1234"
+              }
+            }
+          }
+        },
+        "required": [
+          "IDCLIENT"
+        ],
+        "title": "ProjetStoreRequest"
+      },
+      "QuincaillerieInterventionResource": {
+        "type": "object",
+        "properties": {
+          "IDQUINCAILLERIE_INTERVENTION": {
+            "type": "string"
+          },
+          "INTERVENTION": {
+            "$ref": "#/components/schemas/InterventionResource"
+          },
+          "QUINCAILLERIE": {
+            "$ref": "#/components/schemas/QuincaillerieResource"
+          }
+        },
+        "required": [
+          "IDQUINCAILLERIE_INTERVENTION"
+        ],
+        "title": "QuincaillerieInterventionResource"
+      },
+      "QuincaillerieResource": {
+        "type": "object",
+        "properties": {
+          "IDQUINCAILLERIE": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDQUINCAILLERIE",
+          "LIBELLE"
+        ],
+        "title": "QuincaillerieResource"
+      },
+      "QuoteListResource": {
+        "type": "object",
+        "properties": {
+          "COMMANDE": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteResource"
+            }
+          },
+          "DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteResource"
+            }
+          }
+        },
+        "required": [
+          "COMMANDE",
+          "DEVIS"
+        ],
+        "title": "QuoteListResource"
+      },
+      "QuoteRequest": {
+        "type": "object",
+        "properties": {
+          "INDICE_CONFIANCE": {
+            "type": "string"
+          },
+          "COMMENTAIRE": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "integer"
+          },
+          "IDCLIENT": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "IDPROJET",
+          "IDCLIENT"
+        ],
+        "title": "QuoteRequest"
+      },
+      "QuoteResource": {
+        "type": "object",
+        "properties": {
+          "IDDEVIS": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "string"
+          },
+          "IDCLIENT": {
+            "type": "string"
+          },
+          "NUMERO_DEVIS": {
+            "type": "string"
+          },
+          "TEXTE_DEVIS": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "DATE_SIGNATURE": {
+            "type": "string"
+          },
+          "DATE_CREATION": {
+            "type": "string"
+          },
+          "PRIX_TTC": {
+            "type": "string"
+          },
+          "REFUSE": {
+            "type": "string"
+          },
+          "MONTANT_NEGOCIE_TTC": {
+            "type": "string"
+          },
+          "MONTANT_BRUT_TTC": {
+            "type": "string"
+          },
+          "DEVIS_SIGNE": {
+            "type": "string"
+          },
+          "INDICE_CONFIANCE": {
+            "type": "string"
+          },
+          "COMMENTAIRE": {
+            "type": "string"
+          },
+          "VALEUR_REMISE": {
+            "type": "string"
+          },
+          "DATE_TRAVAUX": {
+            "type": "string"
+          },
+          "PRIX_VENTE_HT": {
+            "type": "string"
+          },
+          "DATE_TRANSMISSION": {
+            "type": "string"
+          },
+          "DATE_REFUSE": {
+            "type": "string"
+          },
+          "PROJET": {
+            "$ref": "#/components/schemas/ProjetResource"
+          },
+          "LIGNE_DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LigneDevisResource"
+            }
+          },
+          "INTERVENTION": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InterventionResource"
+            }
+          },
+          "FACTURE": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FactureResource"
+            }
+          },
+          "SOUS_FACTURE": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SousFactureResource"
+            }
+          },
+          "RDVS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RdvResource"
+            }
+          }
+        },
+        "required": [
+          "IDDEVIS",
+          "IDPROJET",
+          "IDCLIENT",
+          "NUMERO_DEVIS",
+          "TEXTE_DEVIS",
+          "LIBELLE",
+          "DATE_SIGNATURE",
+          "DATE_CREATION",
+          "PRIX_TTC",
+          "REFUSE",
+          "MONTANT_NEGOCIE_TTC",
+          "MONTANT_BRUT_TTC",
+          "DEVIS_SIGNE",
+          "INDICE_CONFIANCE",
+          "COMMENTAIRE",
+          "VALEUR_REMISE",
+          "DATE_TRAVAUX",
+          "PRIX_VENTE_HT",
+          "DATE_TRANSMISSION",
+          "DATE_REFUSE"
+        ],
+        "title": "QuoteResource"
+      },
+      "RankingResource": {
+        "type": "object",
+        "properties": {
+          "IDDEVIS": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          },
+          "DATE_SIGNATURE": {
+            "type": "string"
+          },
+          "DATE_REFUSE": {
+            "type": "string"
+          },
+          "MONTANT_BRUT_TTC": {
+            "type": "string"
+          },
+          "MONTANT_NEGOCIE_TTC": {
+            "type": "string"
+          },
+          "PRIX_VENTE_HT": {
+            "type": "string"
+          },
+          "VALEUR_REMISE": {
+            "type": "string"
+          },
+          "NET_HT": {
+            "type": "string"
+          },
+          "PROJET": {
+            "$ref": "#/components/schemas/ProjetResource"
+          },
+          "LIGNE_DEVIS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LigneDevisResource"
+            }
+          }
+        },
+        "required": [
+          "IDDEVIS",
+          "IDPROJET",
+          "LIBELLE",
+          "DATE_SIGNATURE",
+          "DATE_REFUSE",
+          "MONTANT_BRUT_TTC",
+          "MONTANT_NEGOCIE_TTC",
+          "PRIX_VENTE_HT",
+          "VALEUR_REMISE",
+          "NET_HT"
+        ],
+        "title": "RankingResource"
+      },
+      "RdvRequest": {
+        "type": "object",
+        "properties": {
+          "RDV_DEBUT": {
+            "type": "string"
+          },
+          "RDV_FIN": {
+            "type": "string"
+          },
+          "RDV_OBJET": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 250
+          },
+          "IDADRESSE": {
+            "type": "integer"
+          },
+          "OBSERVATIONS": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 250
+          },
+          "IDNATURE_RDV": {
+            "type": "integer"
+          },
+          "IDPROJET": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "idsPersonnel": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "RDV_DEBUT",
+          "RDV_FIN"
+        ],
+        "title": "RdvRequest"
+      },
+      "RdvResource": {
+        "type": "object",
+        "properties": {
+          "IDRDV": {
+            "type": "string"
+          },
+          "IDPROJET": {
+            "type": "string"
+          },
+          "IDCLIENT": {
+            "type": "string"
+          },
+          "RDV_DEBUT": {
+            "type": "string"
+          },
+          "RDV_OBJET": {
+            "type": "string"
+          },
+          "IDNATURE_RDV": {
+            "type": "string"
+          },
+          "IDADRESSE": {
+            "type": "string"
+          },
+          "RDV_FIN": {
+            "type": "string"
+          },
+          "OBSERVATIONS": {
+            "type": "string"
+          },
+          "AUTEUR": {
+            "type": "string"
+          },
+          "DATE_MODIF": {
+            "type": "string"
+          },
+          "LU": {
+            "type": "string"
+          },
+          "SUPPRIME": {
+            "type": "string"
+          },
+          "RDV_REALISE": {
+            "type": "string"
+          },
+          "IDPERSONNEL": {
+            "type": "string"
+          },
+          "PROJET": {
+            "$ref": "#/components/schemas/ProjetResource"
+          },
+          "NATURE_RDV": {
+            "$ref": "#/components/schemas/NatureRdvResource"
+          },
+          "RDV_PERSONNEL": {
+            "$ref": "#/components/schemas/NatureRdvResource"
+          },
+          "ADRESSE": {
+            "$ref": "#/components/schemas/AdresseResource"
+          },
+          "CLIENT": {
+            "$ref": "#/components/schemas/ClientResource"
+          },
+          "PERSONNELS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonnelResource"
+            }
+          }
+        },
+        "required": [
+          "IDRDV",
+          "IDPROJET",
+          "RDV_DEBUT",
+          "RDV_OBJET",
+          "IDNATURE_RDV",
+          "IDADRESSE",
+          "RDV_FIN",
+          "OBSERVATIONS",
+          "AUTEUR",
+          "DATE_MODIF",
+          "LU",
+          "SUPPRIME",
+          "RDV_REALISE",
+          "IDPERSONNEL"
+        ],
+        "title": "RdvResource"
+      },
+      "ReportListResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "step": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportStepResource"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "step"
+        ],
+        "title": "ReportListResource"
+      },
+      "ReportResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ReportResource"
+      },
+      "ReportStepQuestionResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "type",
+          "rules"
+        ],
+        "title": "ReportStepQuestionResource"
+      },
+      "ReportStepResource": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportStepQuestionResource"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "questions"
+        ],
+        "title": "ReportStepResource"
+      },
+      "ReportSubmissionResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "submitted_at": {
+            "type": "string"
+          },
+          "report_id": {
+            "type": "string"
+          },
+          "submitted_personnel_id": {
+            "type": "string"
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportSubmissionResponseResource"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "submitted_at",
+          "report_id",
+          "submitted_personnel_id",
+          "responses"
+        ],
+        "title": "ReportSubmissionResource"
+      },
+      "ReportSubmissionResponseResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question_id": {
+            "type": "string"
+          },
+          "question_label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "question_id",
+          "question_label",
+          "value"
+        ],
+        "title": "ReportSubmissionResponseResource"
+      },
+      "RoleResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "common_name": {
+            "type": "string"
+          },
+          "id_droit": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "common_name",
+          "id_droit",
+          "color"
+        ],
+        "title": "RoleResource"
+      },
+      "SMTPSettingsResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "encryption": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "customer_id",
+          "port",
+          "host",
+          "username",
+          "password",
+          "encryption"
+        ],
+        "title": "SMTPSettingsResource"
+      },
+      "SousFactureResource": {
+        "type": "object",
+        "properties": {
+          "IDSOUSFACTURE": {
+            "type": "string"
+          },
+          "IDDEVIS": {
+            "type": "string"
+          },
+          "FACTURE_FORMAT": {
+            "type": "string"
+          },
+          "NUMFACTURE": {
+            "type": "string"
+          },
+          "SOLDE_DU": {
+            "type": "string"
+          },
+          "TOTAL_HT": {
+            "type": "string"
+          },
+          "TOTAL_TTC": {
+            "type": "string"
+          },
+          "TYPE_FACTURE": {
+            "type": "string"
+          },
+          "OBSERVATION": {
+            "type": "string"
+          },
+          "DATE_FACTURE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDSOUSFACTURE",
+          "IDDEVIS",
+          "FACTURE_FORMAT",
+          "NUMFACTURE",
+          "SOLDE_DU",
+          "TOTAL_HT",
+          "TOTAL_TTC",
+          "TYPE_FACTURE",
+          "OBSERVATION",
+          "DATE_FACTURE"
+        ],
+        "title": "SousFactureResource"
+      },
+      "TypeInterventionResource": {
+        "type": "object",
+        "properties": {
+          "IDTYPE_INTERVENTION": {
+            "type": "string"
+          },
+          "LIBELLE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "IDTYPE_INTERVENTION",
+          "LIBELLE"
+        ],
+        "title": "TypeInterventionResource"
+      },
+      "UrlShortenerRequest": {
+        "type": "object",
+        "properties": {
+          "to_url": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "integer"
+          }
+        },
+        "title": "UrlShortenerRequest"
+      },
+      "UrlShortenerResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "to_url": {
+            "type": "string"
+          },
+          "from_url": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "string"
+          },
+          "opened_count": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "to_url",
+          "from_url",
+          "customer_id",
+          "opened_count",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "UrlShortenerResource"
+      },
+      "UserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "roles": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "roles"
+        ],
+        "title": "UserRequest"
+      },
+      "UserResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "token",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "UserResource"
+      }
+    },
+    "responses": {
+      "ValidationException": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Errors overview."
+                },
+                "errors": {
+                  "type": "object",
+                  "description": "A detailed description of each field that failed validation.",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "message",
+                "errors"
+              ]
+            }
+          }
+        }
+      },
+      "ModelNotFoundException": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error overview."
+                }
+              },
+              "required": [
+                "message"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 interface SendOpenAiData {
     type:
         'session.update' |
+        'response.create' |
         'input_audio_buffer.append' |
         'conversation.item.truncate' |
         'conversation.item.create',
@@ -10,6 +11,7 @@ interface SendOpenAiData {
     audio_end_ms?: number,
     item?: {}
     session?: {}
+    response?: {}
 }
 
 interface ReceiveOpenAiData {

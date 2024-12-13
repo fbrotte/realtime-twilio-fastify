@@ -19,7 +19,7 @@ export class BotController {
 
         this.connection = connection
 
-        this.functionController = new FunctionController('./src/function.yaml');
+        this.functionController = new FunctionController('./src/function.json');
 
         this.openAiWs = new WebSocket(OPENAI_WSS, {
             headers: {
@@ -44,10 +44,6 @@ export class BotController {
             if (this.openAiWs.readyState === WebSocket.OPEN)  this.openAiWs.close()
             console.log('Client disconnected.')
         })
-    }
-
-    get test() {
-        return this.lastAssistantItem
     }
 
     initializeSession() {
@@ -75,21 +71,6 @@ export class BotController {
             }
         })
     }
-
-    // sendInitialConversationItem() {
-    //     const initialConversationItem = {
-    //         type: 'conversation.item.create',
-    //         item: {
-    //             type: 'message',
-    //             role: 'user',
-    //             content: []
-    //         }
-    //     }
-    //
-    //     if (SHOW_TIMING_MATH) console.log('Sending initial conversation item:', JSON.stringify(initialConversationItem))
-    //     this.sendDataToOpenAi(initialConversationItem)
-    //     this.sendDataToOpenAi({type: 'response.create'})
-    // }
 
     sendDataToTwilio(data: SendTwilioData){
         data.streamSid = this.streamSid
@@ -125,20 +106,25 @@ export class BotController {
             }
 
             if(response.type === 'response.function_call_arguments.done'){
-                console.log(response.name, response.arguments)
+                console.log("Function :", response.name, response.arguments)
+
+                this.sendDataToOpenAi({
+                    type: 'response.create',
+                    // response: {
+                    //     instructions: "Dit a l'utilisateur que tu prend en charge ca demande"
+                    // }
+                })
 
                 const result = await this.functionController.executeFunction(response.name, response.arguments)
-                console.log("response ", result)
 
                 this.sendDataToOpenAi({
                     type: 'conversation.item.create',
                     item: {
                         type: "function_call_output",
-                        call_id: 'response.call_id',
-                        output: result
+                        call_id: response.call_id,
+                        output: JSON.stringify(result)
                     },
                 });
-
             }
 
             if (response.type === 'response.audio.delta' && response.delta) {
@@ -212,14 +198,14 @@ export class BotController {
         console.log(`Calculating elapsed time for truncation: ${this.latestMediaTimestamp} - ${this.responseStartTimestampTwilio} = ${elapsedTime}ms`)
 
 
-        if (this.lastAssistantItem) {
-            this.sendDataToOpenAi({
-                type: 'conversation.item.truncate',
-                item_id: this.lastAssistantItem,
-                content_index: 0,
-                audio_end_ms: elapsedTime
-            })
-        }
+        // if (this.lastAssistantItem) {
+        //     this.sendDataToOpenAi({
+        //         type: 'conversation.item.truncate',
+        //         item_id: this.lastAssistantItem,
+        //         content_index: 0,
+        //         audio_end_ms: elapsedTime
+        //     })
+        // }
 
         this.sendDataToTwilio({
             event: 'clear',
