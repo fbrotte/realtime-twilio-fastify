@@ -1,18 +1,23 @@
-import {OPENAI_API_KEY, SHOW_TIMING_MATH, SYSTEM_MESSAGE, VOICE, OPENAI_WSS, OPENAI_EVENTS_LOG} from "../config.js"
+import {OPENAI_API_KEY, SHOW_TIMING_MATH, SYSTEM_MESSAGE, VOICE, OPENAI_WSS, OPENAI_EVENTS_LOG} from "../config"
 import WebSocket from "ws"
-import {FunctionController} from "./FunctionController.js";
+import {FunctionController} from "./FunctionController";
+
+
 
 export class BotController {
-    constructor(connection) {
+    private connection: WebSocket;
+    private openAiWs: WebSocket;
+    private markQueue: string[] = [];
+    private lastAssistantItem: string | null  = null;
+    private latestMediaTimestamp: number = 0;
+    private responseStartTimestampTwilio: number | null = null;
+    private streamSid: string | null = null;
+    private functionController: FunctionController;
+
+    constructor(connection: WebSocket) {
         console.log('Initialisation')
 
         this.connection = connection
-        this.markQueue = []
-        this.lastAssistantItem = null
-        this.latestMediaTimestamp = null
-        this.responseStartTimestampTwilio = null
-        this.lastAssistantItem = null
-        this.streamSid = null
 
         this.functionController = new FunctionController('./src/function.yaml');
 
@@ -25,7 +30,7 @@ export class BotController {
 
         // Open Ai Event
         this.openAiWs.on('open', () => this.initializeSession())
-        this.openAiWs.on('message', (data) => this.handleOpenAi(data))
+        this.openAiWs.on('message', (data: string) => this.handleOpenAi(data))
         this.openAiWs.on('close', () => {
             console.log('Disconnected from the OpenAI Realtime API')
         })
@@ -34,18 +39,20 @@ export class BotController {
         })
 
         // Twilio Event
-        this.connection.on('message', (message) => this.handleTwilio(message))
+        this.connection.on('message', (message: string) => this.handleTwilio(message))
         this.connection.on('close', () => {
             if (this.openAiWs.readyState === WebSocket.OPEN)  this.openAiWs.close()
             console.log('Client disconnected.')
         })
     }
 
+    get test() {
+        return this.lastAssistantItem
+    }
+
     initializeSession() {
-
         console.log('initializeSession')
-
-        const sessionUpdate = {
+        this.sendDataToOpenAi({
             type: 'session.update',
             session: {
                 turn_detection: {
@@ -66,50 +73,45 @@ export class BotController {
                 modalities: ["text", "audio"],
                 temperature: 0.8,
             }
-        }
-        this.sendDataToOpenAi(sessionUpdate)
+        })
     }
 
-    sendInitialConversationItem() {
-        const initialConversationItem = {
-            type: 'conversation.item.create',
-            item: {
-                type: 'message',
-                role: 'user',
-                content: []
-            }
-        }
+    // sendInitialConversationItem() {
+    //     const initialConversationItem = {
+    //         type: 'conversation.item.create',
+    //         item: {
+    //             type: 'message',
+    //             role: 'user',
+    //             content: []
+    //         }
+    //     }
+    //
+    //     if (SHOW_TIMING_MATH) console.log('Sending initial conversation item:', JSON.stringify(initialConversationItem))
+    //     this.sendDataToOpenAi(initialConversationItem)
+    //     this.sendDataToOpenAi({type: 'response.create'})
+    // }
 
-        if (SHOW_TIMING_MATH) console.log('Sending initial conversation item:', JSON.stringify(initialConversationItem))
-        this.sendDataToOpenAi(initialConversationItem)
-        this.sendDataToOpenAi({type: 'response.create'})
-    }
-
-    sendDataToTwilio(data){
-        if(!this.streamSid) throw new Error("steamSid required")
-        if(!data.event) throw new Error("Twilio data required event key")
-
+    sendDataToTwilio(data: SendTwilioData){
         data.streamSid = this.streamSid
         this.connection.send(JSON.stringify(data))
     }
 
-    sendDataToOpenAi(data){
+    sendDataToOpenAi(data: SendOpenAiData){
         this.openAiWs.send(JSON.stringify(data))
     }
 
     sendMark() {
         if (this.streamSid) {
-            const markEvent = {
-                event: 'mark',
-                mark: {name: 'responsePart'}
-            }
-            this.sendDataToTwilio(markEvent)
+            this.sendDataToTwilio({
+                event: "mark",
+                mark: { name: 'responsePart' }
+            })
             this.markQueue.push('responsePart')
         }
     }
-    async handleOpenAi(data){
+    async handleOpenAi(data: string){
         try {
-            const response = JSON.parse(data)
+            const response: ReceiveOpenAiData = JSON.parse(data)
 
             if(OPENAI_EVENTS_LOG.includes(response.type))
                 console.error(response)
@@ -127,24 +129,23 @@ export class BotController {
 
                 const result = await this.functionController.executeFunction(response.name, response.arguments)
                 console.log("response ", result)
-                const functionResponse = {
+
+                this.sendDataToOpenAi({
                     type: 'conversation.item.create',
                     item: {
                         type: "function_call_output",
                         call_id: 'response.call_id',
                         output: result
                     },
-                };
-                this.sendDataToOpenAi(functionResponse);
+                });
 
             }
 
             if (response.type === 'response.audio.delta' && response.delta) {
-                const audioDelta = {
+                this.sendDataToTwilio({
                     event: 'media',
                     media: {payload: Buffer.from(response.delta, 'base64').toString('base64')}
-                }
-                this.sendDataToTwilio(audioDelta)
+                })
 
                 if (!this.responseStartTimestampTwilio) {
                     this.responseStartTimestampTwilio = this.latestMediaTimestamp
@@ -165,9 +166,9 @@ export class BotController {
         }
     }
 
-    handleTwilio(message){
+    handleTwilio(message: string){
         try {
-            const data = JSON.parse(message)
+            const data: ReceiveTwilioData =  JSON.parse(message)
 
             switch (data.event) {
                 case 'media':
@@ -175,11 +176,10 @@ export class BotController {
                     this.latestMediaTimestamp = data.media.timestamp
                     if (SHOW_TIMING_MATH) console.log(`Received media message with timestamp: ${this.latestMediaTimestamp}ms`)
                     if (this.openAiWs.readyState === WebSocket.OPEN) {
-                        const audioAppend = {
+                        this.sendDataToOpenAi({
                             type: 'input_audio_buffer.append',
                             audio: data.media.payload
-                        }
-                        this.sendDataToOpenAi(audioAppend)
+                        })
                     }
                     break
                 case 'start':
@@ -213,14 +213,12 @@ export class BotController {
 
 
         if (this.lastAssistantItem) {
-            const truncateEvent = {
+            this.sendDataToOpenAi({
                 type: 'conversation.item.truncate',
                 item_id: this.lastAssistantItem,
                 content_index: 0,
                 audio_end_ms: elapsedTime
-            }
-            if (SHOW_TIMING_MATH) console.log('Sending truncation event:', JSON.stringify(truncateEvent))
-            this.sendDataToOpenAi(truncateEvent)
+            })
         }
 
         this.sendDataToTwilio({

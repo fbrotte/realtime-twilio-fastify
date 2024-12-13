@@ -1,9 +1,21 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
-import fetch from 'node-fetch';
+
+type Tool = {
+    name: string;
+    type: string;
+    description: string;
+    parameters?: {
+        type: string;
+        properties: Record<string, { type: string; description: string }>;
+        required: string[];
+        additionalProperties: boolean;
+    };
+};
 
 export class FunctionController {
-    constructor(openApiFilePath) {
+    private openApiDoc;
+    constructor(openApiFilePath: string) {
 
         const fileContent = fs.readFileSync(openApiFilePath, 'utf8');
 
@@ -16,13 +28,7 @@ export class FunctionController {
 
     get tools() {
         try {
-            // Vérifiez que `paths` existe et est un objet
-            if (!this.openApiDoc.paths || typeof this.openApiDoc.paths !== 'object') {
-                console.error("Invalid or missing 'paths' in OpenAPI document.");
-                return [];
-            }
-
-            return Object.entries(this.openApiDoc.paths).reduce((tools, [path, operations]) => {
+            return Object.entries(this.openApiDoc.paths).reduce<Tool[]>((tools, [path, operations]) => {
                 if (!operations || typeof operations !== 'object') {
                     console.warn(`Invalid operations for path: ${path}`);
                     return tools;
@@ -37,7 +43,7 @@ export class FunctionController {
                     const parametersSchema = operation.parameters?.length > 0
                         ? {
                             type: "object",
-                            properties: operation.parameters.reduce((acc, param) => {
+                            properties: operation.parameters.reduce((acc: { [x: string]: { type: any; description: any; }; }, param: { name: string | number; schema: { type: any; }; description: any; }) => {
                                 acc[param.name] = {
                                     type: param.schema?.type || "string",
                                     description: param.description || ""
@@ -45,8 +51,8 @@ export class FunctionController {
                                 return acc;
                             }, {}),
                             required: operation.parameters
-                                .filter(p => p.required)
-                                .map(p => p.name),
+                                .filter((p: { required: any; }) => p.required)
+                                .map((p: { name: any; }) => p.name),
                             additionalProperties: false
                         }
                         : null;
@@ -65,5 +71,9 @@ export class FunctionController {
             console.error('Error loading OpenAPI tools:', error);
             return [];
         }
+    }
+
+    async executeFunction(name: any, arg: any) {
+        return { name, arg }
     }
 }

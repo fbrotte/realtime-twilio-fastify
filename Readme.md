@@ -39,7 +39,7 @@ Once the tunnel has been opened, copy the `Forwarding` URL. It will look somethi
 need this when configuring your Twilio number setup.
 
 Note that the `ngrok` command above forwards to a development server running on port `5050`, which is the default port configured in this application. If
-you override the `PORT` defined in `index.js`, you will need to update the `ngrok` command accordingly.
+you override the `PORT` defined in `index.ts`, you will need to update the `ngrok` command accordingly.
 
 Keep in mind that each time you run the `ngrok http` command, a new URL will be created, and you'll need to update it everywhere it is referenced below.
 
@@ -70,7 +70,7 @@ In the .env file, update the `OPENAI_API_KEY` to your OpenAI API key from the **
 ## Run the app
 Once ngrok is running, dependencies are installed, Twilio is configured properly, and the `.env` is set up, run the dev server with the following command:
 ```
-node index.js
+node index.ts
 ```
 ## Test the app
 With the development server running, call the phone number you purchased in the **Prerequisites**. After the introduction, you should be able to talk to the AI Assistant. Have fun!

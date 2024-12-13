@@ -1,13 +1,9 @@
 import Fastify from 'fastify';
-
 import fastifyFormBody from '@fastify/formbody';
 import fastifyWs from '@fastify/websocket';
-
 import { registerRoutes } from './src/routes';
-
 import { PORT } from './src/config';
 
-// Initialize Fastify
 const fastify = Fastify();
 fastify.register(fastifyFormBody);
 fastify.register(fastifyWs);
