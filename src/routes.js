@@ -1,9 +1,15 @@
 
 import { BotController } from './Controllers/BotController'
+import { FunctionController } from "./Controllers/FunctionController.js";
 
 export const registerRoutes = (fastify) => {
     fastify.get('/', async (request, reply) => {
         reply.send({message: 'Twilio Media Stream Server is running!'})
+    })
+
+    fastify.get('/function', async (request, reply) => {
+        const functionController = new FunctionController('./src/function.yaml')
+        return functionController.tools
     })
 
 

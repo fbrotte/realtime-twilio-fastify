@@ -14,10 +14,7 @@ export class BotController {
         this.lastAssistantItem = null
         this.streamSid = null
 
-
-
-        this.functionController = new FunctionController('./src/function.yaml', 'https://jsonplaceholder.typicode.com');
-        // console.log(this.functionController.tools)
+        this.functionController = new FunctionController('./src/function.yaml');
 
         this.openAiWs = new WebSocket(OPENAI_WSS, {
             headers: {
@@ -110,7 +107,7 @@ export class BotController {
             this.markQueue.push('responsePart')
         }
     }
-    handleOpenAi(data){
+    async handleOpenAi(data){
         try {
             const response = JSON.parse(data)
 
@@ -128,19 +125,18 @@ export class BotController {
             if(response.type === 'response.function_call_arguments.done'){
                 console.log(response.name, response.arguments)
 
-                this.functionController.executeFunction(response.name, response.arguments)
-                        .then(result => {
-                            console.log("response ", result)
-                            const functionResponse = {
-                                type: 'conversation.item.create',
-                                item: {
-                                    type: "function_call_output",
-                                    call_id: 'response.call_id',
-                                    output: result
-                                },
-                            };
-                            this.sendDataToOpenAi(functionResponse);
-                        })
+                const result = await this.functionController.executeFunction(response.name, response.arguments)
+                console.log("response ", result)
+                const functionResponse = {
+                    type: 'conversation.item.create',
+                    item: {
+                        type: "function_call_output",
+                        call_id: 'response.call_id',
+                        output: result
+                    },
+                };
+                this.sendDataToOpenAi(functionResponse);
+
             }
 
             if (response.type === 'response.audio.delta' && response.delta) {
@@ -158,7 +154,6 @@ export class BotController {
                 if (response.item_id) {
                     this.lastAssistantItem = response.item_id
                 }
-
                 this.sendMark()
             }
 
