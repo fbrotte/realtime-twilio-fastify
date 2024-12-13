@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: JSONPlaceholder API
+  description: This is a simple mock API for testing and learning purposes.
+  version: 1.0.0
+servers:
+  - url: https://jsonplaceholder.typicode.com
+
+paths:
+  /posts:
+    get:
+      summary: Get all posts
+      operationId: getPosts
+      description: Retrieve a list of all posts.
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    body:
+                      type: string
+
+    post:
+      summary: Create a new post
+      operationId: createPost
+      description: Create a new post with the provided data.
+      requestBody:
+        description: The post to be created.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                title:
+                  type: string
+                body:
+                  type: string
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  body:
+                    type: string
+
+  /posts/{postId}:
+    get:
+      summary: Get a specific post by ID
+      operationId: getPostById
+      description: Retrieve a post by its ID.
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: ID of the post to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  body:
+                    type: string
+        '404':
+          description: Post not found
+
+  /users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      description: Retrieve a list of all users.
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    address:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                        suite:
+                          type: string
+                        city:
+                          type: string
+                        zipcode:
+                          type: string
+                    phone:
+                      type: string
+                    website:
+                      type: string
+                    company:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        catchPhrase:
+                          type: string
+                        bs:
+                          type: string
+
+  /users/{userId}:
+    get:
+      summary: Get a specific user by ID
+      operationId: getUserById
+      description: Retrieve a user by their ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  address:
+                    type: object
+                    properties:
+                      street:
+                        type: string
+                      suite:
+                        type: string
+                      city:
+                        type: string
+                      zipcode:
+                        type: string
+                  phone:
+                    type: string
+                  website:
+                    type: string
+                  company:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      catchPhrase:
+                        type: string
+                      bs:
+                        type: string
+        '404':
+          description: User not found

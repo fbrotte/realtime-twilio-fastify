@@ -1,10 +1,11 @@
-import {OPENAI_API_KEY, SHOW_TIMING_MATH, SYSTEM_MESSAGE, VOICE, OPENAI_WSS} from "../config.js"
+import {OPENAI_API_KEY, SHOW_TIMING_MATH, SYSTEM_MESSAGE, VOICE, OPENAI_WSS, OPENAI_EVENTS_LOG} from "../config.js"
 import WebSocket from "ws"
+import {FunctionController} from "./FunctionController.js";
 
 export class BotController {
     constructor(connection) {
         console.log('Initialisation')
-        
+
         this.connection = connection
         this.markQueue = []
         this.lastAssistantItem = null
@@ -13,6 +14,11 @@ export class BotController {
         this.lastAssistantItem = null
         this.streamSid = null
 
+
+
+        this.functionController = new FunctionController('./src/function.yaml', 'https://jsonplaceholder.typicode.com');
+        // console.log(this.functionController.tools)
+
         this.openAiWs = new WebSocket(OPENAI_WSS, {
             headers: {
                 Authorization: `Bearer ${OPENAI_API_KEY}`,
@@ -20,8 +26,9 @@ export class BotController {
             }
         })
 
+        // Open Ai Event
         this.openAiWs.on('open', () => this.initializeSession())
-        this.openAiWs.on('message', (data) => this.handleMessage(data))
+        this.openAiWs.on('message', (data) => this.handleOpenAi(data))
         this.openAiWs.on('close', () => {
             console.log('Disconnected from the OpenAI Realtime API')
         })
@@ -29,8 +36,8 @@ export class BotController {
             console.error('Error in the OpenAI WebSocket:', error)
         })
 
-        this.connection.on('message', (message) => this.handleMessageCall(message))
-
+        // Twilio Event
+        this.connection.on('message', (message) => this.handleTwilio(message))
         this.connection.on('close', () => {
             if (this.openAiWs.readyState === WebSocket.OPEN)  this.openAiWs.close()
             console.log('Client disconnected.')
@@ -38,6 +45,9 @@ export class BotController {
     }
 
     initializeSession() {
+
+        console.log('initializeSession')
+
         const sessionUpdate = {
             type: 'session.update',
             session: {
@@ -52,20 +62,7 @@ export class BotController {
                 input_audio_transcription: {
                     model: "whisper-1"
                 },
-                tools: [
-                    {
-                        type: "function",
-                        name: "get_weather",
-                        description: "Get the current weather for a location, tell the user you are fetching the weather.",
-                        parameters: {
-                            type: "object",
-                            properties: {
-                                location: {"type": "string"}
-                            },
-                            required: ["location"]
-                        }
-                    }
-                ],
+                tools: this.functionController.tools,
                 tool_choice: "auto",
                 voice: VOICE,
                 instructions: SYSTEM_MESSAGE,
@@ -73,9 +70,9 @@ export class BotController {
                 temperature: 0.8,
             }
         }
-        console.log('Sending session update:', JSON.stringify(sessionUpdate))
-        this.openAiWs.send(JSON.stringify(sessionUpdate))
+        this.sendDataToOpenAi(sessionUpdate)
     }
+
     sendInitialConversationItem() {
         const initialConversationItem = {
             type: 'conversation.item.create',
@@ -87,67 +84,71 @@ export class BotController {
         }
 
         if (SHOW_TIMING_MATH) console.log('Sending initial conversation item:', JSON.stringify(initialConversationItem))
-        this.openAiWs.send(JSON.stringify(initialConversationItem))
-        this.openAiWs.send(JSON.stringify({type: 'response.create'}))
+        this.sendDataToOpenAi(initialConversationItem)
+        this.sendDataToOpenAi({type: 'response.create'})
     }
 
-    handleSpeechStartedEvent() {
-        if (this.markQueue.length < 0 || this.responseStartTimestampTwilio === null) return
+    sendDataToTwilio(data){
+        if(!this.streamSid) throw new Error("steamSid required")
+        if(!data.event) throw new Error("Twilio data required event key")
 
-        const elapsedTime = this.latestMediaTimestamp - this.responseStartTimestampTwilio
-        if (SHOW_TIMING_MATH) console.log(`Calculating elapsed time for truncation: ${this.latestMediaTimestamp} - ${this.responseStartTimestampTwilio} = ${elapsedTime}ms`)
-
-        if (this.lastAssistantItem) {
-            const truncateEvent = {
-                type: 'conversation.item.truncate',
-                item_id: this.lastAssistantItem,
-                content_index: 0,
-                audio_end_ms: elapsedTime
-            }
-            if (SHOW_TIMING_MATH) console.log('Sending truncation event:', JSON.stringify(truncateEvent))
-            this.openAiWs.send(JSON.stringify(truncateEvent))
-        }
-
-        this.connection.send(JSON.stringify({
-            event: 'clear',
-            streamSid: this.streamSid
-        }))
-
-        // Reset
-        this.markQueue = []
-        this.lastAssistantItem = null
-        this.responseStartTimestampTwilio = null
+        data.streamSid = this.streamSid
+        this.connection.send(JSON.stringify(data))
     }
+
+    sendDataToOpenAi(data){
+        this.openAiWs.send(JSON.stringify(data))
+    }
+
     sendMark() {
         if (this.streamSid) {
             const markEvent = {
                 event: 'mark',
-                streamSid: this.streamSid,
                 mark: {name: 'responsePart'}
             }
-            this.connection.send(JSON.stringify(markEvent))
+            this.sendDataToTwilio(markEvent)
             this.markQueue.push('responsePart')
         }
     }
-    handleMessage(data){
+    handleOpenAi(data){
         try {
             const response = JSON.parse(data)
 
-            if (response.type === 'conversation.item.created') {
-                console.log(`Assistant: ${response.item.role}`, JSON.stringify(response, null, 2))
+            if(OPENAI_EVENTS_LOG.includes(response.type))
+                console.error(response)
+
+            if (response.type === 'response.content_part.done') {
+                console.log(response.part.transcript)
             }
 
             if (response.type === 'conversation.item.input_audio_transcription.completed') {
-                console.log(`User: ${response.transcript}`)
+                console.log(response.transcript)
+            }
+
+            if(response.type === 'response.function_call_arguments.done'){
+                console.log(response.name, response.arguments)
+
+                this.functionController.executeFunction(response.name, response.arguments)
+                        .then(result => {
+                            console.log("response ", result)
+                            const functionResponse = {
+                                type: 'conversation.item.create',
+                                item: {
+                                    type: "function_call_output",
+                                    call_id: 'response.call_id',
+                                    output: result
+                                },
+                            };
+                            this.sendDataToOpenAi(functionResponse);
+                        })
             }
 
             if (response.type === 'response.audio.delta' && response.delta) {
                 const audioDelta = {
                     event: 'media',
-                    streamSid: this.streamSid,
                     media: {payload: Buffer.from(response.delta, 'base64').toString('base64')}
                 }
-                this.connection.send(JSON.stringify(audioDelta))
+                this.sendDataToTwilio(audioDelta)
 
                 if (!this.responseStartTimestampTwilio) {
                     this.responseStartTimestampTwilio = this.latestMediaTimestamp
@@ -169,7 +170,7 @@ export class BotController {
         }
     }
 
-    handleMessageCall(message){
+    handleTwilio(message){
         try {
             const data = JSON.parse(message)
 
@@ -177,18 +178,18 @@ export class BotController {
                 case 'media':
                     // console.log(`Media received: Timestamp: ${latestMediaTimestamp}, Payload size: ${data.media.payload.length}`)
                     this.latestMediaTimestamp = data.media.timestamp
-                    if (SHOW_TIMING_MATH) console.log(`Received media message with timestamp: ${latestMediaTimestamp}ms`)
+                    if (SHOW_TIMING_MATH) console.log(`Received media message with timestamp: ${this.latestMediaTimestamp}ms`)
                     if (this.openAiWs.readyState === WebSocket.OPEN) {
                         const audioAppend = {
                             type: 'input_audio_buffer.append',
                             audio: data.media.payload
                         }
-                        this.openAiWs.send(JSON.stringify(audioAppend))
+                        this.sendDataToOpenAi(audioAppend)
                     }
                     break
                 case 'start':
                     this.streamSid = data.start.streamSid
-                    console.log('Incoming stream has started', this.streamSid)
+                    console.log('Call started', this.streamSid)
 
                     this.responseStartTimestampTwilio = null
                     this.latestMediaTimestamp = 0
@@ -205,5 +206,35 @@ export class BotController {
         } catch (error) {
             console.error('Error parsing message:', error, 'Message:', message)
         }
+    }
+
+    handleSpeechStartedEvent() {
+        console.log("handleSpeechStartedEvent")
+
+        if (this.markQueue.length < 0 || this.responseStartTimestampTwilio === null) return
+
+        const elapsedTime = this.latestMediaTimestamp - this.responseStartTimestampTwilio
+        console.log(`Calculating elapsed time for truncation: ${this.latestMediaTimestamp} - ${this.responseStartTimestampTwilio} = ${elapsedTime}ms`)
+
+
+        if (this.lastAssistantItem) {
+            const truncateEvent = {
+                type: 'conversation.item.truncate',
+                item_id: this.lastAssistantItem,
+                content_index: 0,
+                audio_end_ms: elapsedTime
+            }
+            if (SHOW_TIMING_MATH) console.log('Sending truncation event:', JSON.stringify(truncateEvent))
+            this.sendDataToOpenAi(truncateEvent)
+        }
+
+        this.sendDataToTwilio({
+            event: 'clear',
+        })
+
+        // Reset
+        this.markQueue = []
+        this.lastAssistantItem = null
+        this.responseStartTimestampTwilio = null
     }
 }

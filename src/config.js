@@ -20,3 +20,11 @@ export const PORT = process.env.PORT || 5050; // Allow dynamic port assignment
 export const OPENAI_WSS = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01'
 // Show AI response elapsed timing calculations
 export const SHOW_TIMING_MATH = false;
+
+export const OPENAI_EVENTS_LOG = [
+    'error',
+    'input_audio_buffer.speech_started',
+    // 'response.output_item.done',
+    // 'conversation.item.input_audio_transcription.completed',
+    'conversation.item.input_audio_transcription.failed'
+]
