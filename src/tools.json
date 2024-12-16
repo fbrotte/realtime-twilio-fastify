@@ -73,11 +73,11 @@
             }
           }
         }
-      }
-    },
-    "required": [
-      "NOM", "ADRESSE"
-    ]
+      },
+      "required": [
+        "NOM", "ADRESSE"
+      ]
+    }
   },
   {
     "name": "clientshow",
