@@ -27,7 +27,6 @@ export class FunctionController {
                 description: t.description,
                 type: t.type,
                 parameters: t.parameters,
-                properties: t.properties,
                 required: t.required
             }
         })

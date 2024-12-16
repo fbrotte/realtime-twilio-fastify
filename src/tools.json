@@ -27,18 +27,20 @@
     "url": "/client",
     "type": "function",
     "description": "Créer un client avec son premier projet.",
-    "properties": {
+    "parameters": {
+      "type": "object",
+      "properties": {
         "NOM": {
-            "type": "string"
+          "type": "string"
         },
         "PRENOM": {
-            "type": "string"
+          "type": "string"
         },
         "MAIL": {
-            "type": "string"
+          "type": "string"
         },
         "PORTABLE": {
-            "type": "string"
+          "type": "string"
         },
         "PROJET": {
           "type": "object",
@@ -69,6 +71,7 @@
             "CODE_POSTAL": {
               "type": "string"
             }
+          }
         }
       }
     },
