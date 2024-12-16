@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const { OPENAI_API_KEY } = process.env;
+export const { OPENAI_API_KEY, LOLAPP_TOKEN } = process.env;
+
 
 if (!OPENAI_API_KEY) {
     console.error('Missing OpenAI API key. Please set it in the .env file.');

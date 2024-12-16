@@ -19,7 +19,7 @@ export class BotController {
 
         this.connection = connection
 
-        this.functionController = new FunctionController('./src/function.json');
+        this.functionController = new FunctionController('./src/tools.json');
 
         this.openAiWs = new WebSocket(OPENAI_WSS, {
             headers: {
@@ -118,9 +118,6 @@ export class BotController {
 
                 this.sendDataToOpenAi({
                     type: 'response.create',
-                    // response: {
-                    //     instructions: "Dit a l'utilisateur que tu prend en charge ca demande"
-                    // }
                 })
 
                 const result = await this.functionController.executeFunction(response.name, response.arguments)

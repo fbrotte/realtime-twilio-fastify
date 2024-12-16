@@ -1,0 +1,314 @@
+[
+  {
+    "name": "clientindex",
+    "method": "GET",
+    "url": "/client",
+    "type": "function",
+    "description": "Retourne la liste des clients correspondant aux critères de recherche.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "NOM": {
+          "type": "string"
+        },
+        "PRENOM": {
+          "type": "string"
+
+        },
+        "VILLE": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "name": "clientstore",
+    "method": "POST",
+    "url": "/client",
+    "type": "function",
+    "description": "Créer un client avec son premier projet.",
+    "properties": {
+        "NOM": {
+            "type": "string"
+        },
+        "PRENOM": {
+            "type": "string"
+        },
+        "MAIL": {
+            "type": "string"
+        },
+        "PORTABLE": {
+            "type": "string"
+        },
+        "PROJET": {
+          "type": "object",
+          "properties": {
+            "DESCRIPTION": {
+              "type": "string"
+            },
+            "IDORIGINE": {
+              "type": "integer"
+            },
+            "IDRESPONSABLEPROJET": {
+              "type": "integer"
+            },
+            "OBSERVATION": {
+              "type": "string"
+            }
+          }
+        },
+        "ADRESSE": {
+          "type": "object",
+          "properties": {
+            "ADRESSE_COMPLETE": {
+              "type": "string"
+            },
+            "VILLE": {
+              "type": "string"
+            },
+            "CODE_POSTAL": {
+              "type": "string"
+            }
+        }
+      }
+    },
+    "required": [
+      "NOM", "ADRESSE"
+    ]
+  },
+  {
+    "name": "clientshow",
+    "method": "GET",
+    "url": "/client/{id}",
+    "type": "function",
+    "description": "Retourne les informations d'un client.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  },
+  {
+    "name": "interventionsindex",
+    "method": "GET",
+    "url": "/interventions",
+    "type": "function",
+    "description": "Listes les interventions",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "DATE_DEBUT": {
+          "type": "date"
+        },
+        "DATE_FIN": {
+          "type": "date"
+        }
+      },
+      "required": [
+        "DATE_DEBUT"
+      ]
+    }
+  },
+  {
+    "name": "personnelsindex",
+    "method": "GET",
+    "url": "/personnels",
+    "type": "function",
+    "description": "Listes les personnels"
+  },
+  {
+    "name": "projetcancel",
+    "method": "POST",
+    "url": "/projets/{id}/cancel",
+    "type": "function",
+    "description": "Annule un projet",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "ID_MOTIF_SANS_SUITE": {
+          "type": "integer",
+          "description": "Correspond a l'id du motif de l'annulation"
+        }
+      },
+      "required": [
+        "id",
+        "ID_MOTIF_SANS_SUITE"
+      ]
+    }
+  },
+  {
+    "name": "projetsindex",
+    "method": "GET",
+    "url": "/projets",
+    "type": "function",
+    "description": "Listes les projets",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "TYPE": {
+          "type": "ALL"
+        },
+        "DATE_DEBUT": {
+          "type": "date"
+        },
+        "DATE_FIN": {
+          "type": "date"
+        }
+      },
+      "required": [
+        "TYPE",
+        "DATE_DEBUT",
+        "DATE_FIN"
+      ]
+    }
+  },
+  {
+    "name": "projetsshow",
+    "method": "GET",
+    "url": "/projets/{id}",
+    "type": "function",
+    "description": "Retourne les informations d'un projet",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  },
+  {
+    "name": "devisindex",
+    "method": "GET",
+    "url": "/devis",
+    "type": "function",
+    "description": "Listes les devis en attente",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "DATE_DEBUT": {
+          "type": "date"
+        },
+        "DATE_FIN": {
+          "type": "date"
+        },
+        "TYPE": {
+          "type": "attente"
+        }
+      },
+      "required": [
+        "DATE_DEBUT",
+        "DATE_FIN",
+        "TYPE"
+      ]
+    }
+  },
+  {
+    "name": "devisshow",
+    "method": "GET",
+    "url": "/devis/{id}",
+    "type": "function",
+    "description": "Retourne les informations d'un devis",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  },
+  {
+    "name": "rdvsindex",
+    "method": "GET",
+    "url": "/rdvs",
+    "type": "function",
+    "description": "Listes les rendez-vous",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "RDV_DEBUT": {
+          "type": "date"
+        },
+        "RDV_FIN": {
+          "type": "date"
+        }
+      },
+      "required": [
+        "RDV_DEBUT",
+        "RDV_FIN"
+      ]
+    }
+  },
+  {
+    "name": "rdvsstore",
+    "method": "POST",
+    "url": "/rdvs",
+    "type": "function",
+    "description": "Créer un rendez-vous",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "RDV_DEBUT": {
+          "type": "date"
+        },
+        "RDV_FIN": {
+          "type": "date"
+        },
+        "RDV_OBJET": {
+            "type": "string"
+        },
+        "IDNATURE_RDV": {
+            "type": "integer"
+        },
+        "IDADRESSE": {
+            "type": "integer"
+        },
+        "ID_CLIENT": {
+          "type": "integer"
+        },
+        "IDPROJET": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "RDV_DEBUT",
+        "RDV_FIN",
+        "RDV_OBJET"
+      ]
+    }
+  },
+  {
+    "name": "rdvsshow",
+    "method": "GET",
+    "url": "/rdvs/{id}",
+    "type": "function",
+    "description": "Retourne les informations d'un rendez-vous",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+]
