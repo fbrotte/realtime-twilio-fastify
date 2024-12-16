@@ -6,7 +6,7 @@ interface SendTwilioData {
 }
 
 interface ReceiveTwilioData {
-    event: 'media' | 'start' | 'mark'
+    event: 'media' | 'start' | 'mark' | 'dtmf';
     media: {
         payload: Uint8Array;
         timestamp: number;
@@ -14,4 +14,7 @@ interface ReceiveTwilioData {
     start: {
         streamSid: string;
     };
+    dtmf: {
+        digit: string;
+    }
 }

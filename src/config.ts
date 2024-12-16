@@ -4,8 +4,8 @@ dotenv.config();
 export const { OPENAI_API_KEY, LOLAPP_TOKEN } = process.env;
 
 
-if (!OPENAI_API_KEY) {
-    console.error('Missing OpenAI API key. Please set it in the .env file.');
+if (!OPENAI_API_KEY || !LOLAPP_TOKEN) {
+    console.error('Please provide OPENAI_API_KEY and LOLAPP_TOKEN in the .env file');
     process.exit(1);
 }
 export const SYSTEM_MESSAGE = `Votre date limite de connaissances est 2023-10. Vous êtes une IA serviable, spirituelle et amicale.
@@ -23,13 +23,9 @@ export const VOICE = 'ash';
 export const PORT = 5050;
 
 export const OPENAI_WSS = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01'
-// Show AI response elapsed timing calculations
-export const SHOW_TIMING_MATH = false;
+export const SHOW_TIMING_MATH = true;
 
 export const OPENAI_EVENTS_LOG = [
     'error',
-    // 'input_audio_buffer.speech_started',
-    // 'response.output_item.done',
-    // 'conversation.item.input_audio_transcription.completed',
     'conversation.item.input_audio_transcription.failed'
 ]

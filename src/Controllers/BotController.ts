@@ -10,6 +10,7 @@ export class BotController {
     private markQueue: string[] = [];
     private lastAssistantItem: string | null  = null;
     private latestMediaTimestamp: number = 0;
+    private isSpeakingOpenAi: boolean = false;
     private responseStartTimestampTwilio: number | null = null;
     private streamSid: string | null = null;
     private functionController: FunctionController;
@@ -133,19 +134,19 @@ export class BotController {
             }
 
             if (response.type === 'response.audio.delta' && response.delta) {
+                if (!this.responseStartTimestampTwilio) {
+                    this.responseStartTimestampTwilio = this.latestMediaTimestamp
+                    if (SHOW_TIMING_MATH) console.log(`Setting start timestamp for new response: ${this.responseStartTimestampTwilio}ms`)
+                }
+                if (response.item_id) {
+                    this.lastAssistantItem = response.item_id
+                }
+
                 this.sendDataToTwilio({
                     event: 'media',
                     media: {payload: Buffer.from(response.delta, 'base64').toString('base64')}
                 })
 
-                if (!this.responseStartTimestampTwilio) {
-                    this.responseStartTimestampTwilio = this.latestMediaTimestamp
-                    if (SHOW_TIMING_MATH) console.log(`Setting start timestamp for new response: ${this.responseStartTimestampTwilio}ms`)
-                }
-
-                if (response.item_id) {
-                    this.lastAssistantItem = response.item_id
-                }
                 this.sendMark()
             }
 
@@ -163,9 +164,7 @@ export class BotController {
 
             switch (data.event) {
                 case 'media':
-                    // console.log(`Media received: Timestamp: ${latestMediaTimestamp}, Payload size: ${data.media.payload.length}`)
                     this.latestMediaTimestamp = data.media.timestamp
-                    if (SHOW_TIMING_MATH) console.log(`Received media message with timestamp: ${this.latestMediaTimestamp}ms`)
                     if (this.openAiWs.readyState === WebSocket.OPEN) {
                         this.sendDataToOpenAi({
                             type: 'input_audio_buffer.append',
@@ -175,18 +174,25 @@ export class BotController {
                     break
                 case 'start':
                     this.streamSid = data.start.streamSid
-                    console.log('Call started', this.streamSid)
-
-                    this.responseStartTimestampTwilio = null
-                    this.latestMediaTimestamp = 0
+                    // console.log(data.start.mediaFormat.encoding)
                     break
                 case 'mark':
                     if (this.markQueue.length > 0) {
                         this.markQueue.shift()
                     }
                     break
-                default:
-                    console.log('Received non-media event:', data.event)
+                case 'dtmf':
+                    console.log('Received DTMF:', data.dtmf.digit)
+
+                    if(data.dtmf.digit === '1'){
+                        this.sendDataToOpenAi({
+                            type: 'response.create',
+                            response: {
+                                instructions: "Raconte une blague"
+                            }
+                        })
+                    }
+
                     break
             }
         } catch (error) {
@@ -203,14 +209,14 @@ export class BotController {
         console.log(`Calculating elapsed time for truncation: ${this.latestMediaTimestamp} - ${this.responseStartTimestampTwilio} = ${elapsedTime}ms`)
 
 
-        // if (this.lastAssistantItem) {
-        //     this.sendDataToOpenAi({
-        //         type: 'conversation.item.truncate',
-        //         item_id: this.lastAssistantItem,
-        //         content_index: 0,
-        //         audio_end_ms: elapsedTime
-        //     })
-        // }
+        if (this.lastAssistantItem) {
+            this.sendDataToOpenAi({
+                type: 'conversation.item.truncate',
+                item_id: this.lastAssistantItem,
+                content_index: 0,
+                audio_end_ms: elapsedTime
+            })
+        }
 
         this.sendDataToTwilio({
             event: 'clear',

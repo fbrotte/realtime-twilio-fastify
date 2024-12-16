@@ -6,18 +6,9 @@ import {LOLAPP_TOKEN} from "../config";
 export class FunctionController {
     private openApiDoc: APIEndpoint[];
     constructor(openApiFilePath: string) {
-        try{
-            console.log('FunctionController')
-
-            const fileContent = fs.readFileSync(openApiFilePath, 'utf8');
-            if (openApiFilePath.endsWith('.yaml') || openApiFilePath.endsWith('.yml')) {
-                this.openApiDoc = yaml.load(fileContent);
-            } else {
-                this.openApiDoc = JSON.parse(fileContent);
-            }
-        } catch (error) {
-            console.error('Error loading OpenAPI file:', error);
-        }
+        console.log('FunctionController')
+        const fileContent = fs.readFileSync(openApiFilePath, 'utf8');
+        this.openApiDoc = JSON.parse(fileContent);
     }
 
    get tools(){
