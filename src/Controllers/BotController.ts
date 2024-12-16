@@ -44,6 +44,7 @@ export class BotController {
             if (this.openAiWs.readyState === WebSocket.OPEN)  this.openAiWs.close()
             console.log('Client disconnected.')
         })
+
     }
 
     initializeSession() {
@@ -68,6 +69,13 @@ export class BotController {
                 instructions: SYSTEM_MESSAGE,
                 modalities: ["text", "audio"],
                 temperature: 0.8,
+            }
+        })
+
+        this.sendDataToOpenAi({
+            type: 'response.create',
+            response: {
+                instructions: "Dit bonjour a l'utilisateur"
             }
         })
     }

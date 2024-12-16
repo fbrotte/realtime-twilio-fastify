@@ -98,6 +98,8 @@ export class FunctionController {
             const params = {};
             const data = {};
 
+            console.log(op.parameters)
+
             op.parameters?.forEach((param: any) => {
                 const value = JSON.parse(args)[param.name];
                 if (value === undefined) {
@@ -120,7 +122,7 @@ export class FunctionController {
             });
             const url = `${this.openApiDoc.servers?.[0]?.url || ''}${path}`
 
-            console.log('Executing function:', url );
+            console.log('Executing function:', url, method, args);
 
             const response = await axios({
                 method,
@@ -132,7 +134,7 @@ export class FunctionController {
                     ...headers
                 },
                 params,
-                data
+                data: args
             });
 
             return response.data;
