@@ -107,10 +107,10 @@
       "type": "object",
       "properties": {
         "DATE_DEBUT": {
-          "type": "date"
+          "type": "string"
         },
         "DATE_FIN": {
-          "type": "date"
+          "type": "string"
         }
       },
       "required": [
@@ -161,10 +161,10 @@
           "type": "ALL"
         },
         "DATE_DEBUT": {
-          "type": "date"
+          "type": "string"
         },
         "DATE_FIN": {
-          "type": "date"
+          "type": "string"
         }
       },
       "required": [
@@ -202,10 +202,10 @@
       "type": "object",
       "properties": {
         "DATE_DEBUT": {
-          "type": "date"
+          "type": "string"
         },
         "DATE_FIN": {
-          "type": "date"
+          "type": "string"
         },
         "TYPE": {
           "type": "attente"
@@ -246,10 +246,10 @@
       "type": "object",
       "properties": {
         "RDV_DEBUT": {
-          "type": "date"
+          "type": "string"
         },
         "RDV_FIN": {
-          "type": "date"
+          "type": "string"
         }
       },
       "required": [
@@ -268,10 +268,10 @@
       "type": "object",
       "properties": {
         "RDV_DEBUT": {
-          "type": "date"
+          "type": "string"
         },
         "RDV_FIN": {
-          "type": "date"
+          "type": "string"
         },
         "RDV_OBJET": {
             "type": "string"
