@@ -205,7 +205,8 @@
           "type": "string"
         },
         "TYPE": {
-          "type": "attente"
+          "type": "string",
+            "description": "Toujours attente"
         }
       },
       "required": [
