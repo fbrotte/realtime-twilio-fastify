@@ -157,9 +157,6 @@
     "parameters": {
       "type": "object",
       "properties": {
-        "TYPE": {
-          "type": "ALL"
-        },
         "DATE_DEBUT": {
           "type": "string"
         },
