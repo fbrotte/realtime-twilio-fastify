@@ -1,7 +1,7 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import axios from 'axios';
-import {LOLAPP_TOKEN} from "../config";
+import {LOLAPP_TOKEN, LOLAPP_COMPANY_KEY} from "../config";
 
 export class FunctionController {
     private openApiDoc: APIEndpoint[];
@@ -56,7 +56,7 @@ export class FunctionController {
                 url,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Company-Key': 58,
+                    'Company-Key': LOLAPP_COMPANY_KEY,
                     Authorization: LOLAPP_TOKEN,
                 },
                 params,

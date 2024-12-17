@@ -1,3 +1,13 @@
+type VOICE = "alloy" | // robotique
+    "ash" | // realiste, dyanmique
+    "ballade" | // realiste, calme
+    "coral" | // realiste, femme, enjoue
+    "echo" | // lent, robotique
+    "sage" | // femme, calme
+    "shimmer" | // femme, realiste +
+    "verse" // realist, dynamique
+
+
 interface SendOpenAiData {
     type:
         'session.update' |
