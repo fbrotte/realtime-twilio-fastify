@@ -2,7 +2,7 @@
   {
     "name": "clientindex",
     "method": "GET",
-    "url": "/client",
+    "url": "/clients",
     "type": "function",
     "description": "Retourne la liste des clients correspondant aux critères de recherche.",
     "parameters": {
