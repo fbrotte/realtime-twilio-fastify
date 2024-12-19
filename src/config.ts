@@ -3,11 +3,6 @@ dotenv.config();
 
 export const { OPENAI_API_KEY, LOLAPP_TOKEN, LOLAPP_COMPANY_KEY } = process.env;
 
-
-if (!OPENAI_API_KEY || !LOLAPP_TOKEN) {
-    console.error('Please provide OPENAI_API_KEY and LOLAPP_TOKEN in the .env file');
-    process.exit(1);
-}
 export const SYSTEM_MESSAGE = `Votre date limite de connaissances est 2023-10. Vous êtes une IA serviable, spirituelle et amicale.
 Agissez comme un humain, mais rappelez-vous que vous n’êtes pas un humain et que vous ne pouvez pas faire des choses humaines dans le monde réel.
 Votre voix et votre personnalité doivent être chaleureuses et engageantes, avec un ton vif et ludique.

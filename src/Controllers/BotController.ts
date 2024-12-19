@@ -1,12 +1,22 @@
-import {OPENAI_API_KEY, SHOW_TIMING_MATH, SYSTEM_MESSAGE, VOICE, OPENAI_WSS, OPENAI_EVENTS_LOG} from "../config"
+import {
+    OPENAI_API_KEY,
+    SHOW_TIMING_MATH,
+    SYSTEM_MESSAGE,
+    VOICE,
+    OPENAI_WSS,
+    OPENAI_EVENTS_LOG,
+    LOLAPP_TOKEN, LOLAPP_COMPANY_KEY
+} from "../config"
 import WebSocket from "ws"
 import {FunctionController} from "./FunctionController";
+import {OpenAiController} from "./OpenAiController";
+import {ClaudeController} from "./ClaudeController";
 
 
 
 export class BotController {
     private connection: WebSocket;
-    private openAiWs: WebSocket;
+    private realtimeController: WebSocket;
     private markQueue: string[] = [];
     private lastAssistantItem: string | null  = null;
     private latestMediaTimestamp: number = 0;
@@ -17,32 +27,28 @@ export class BotController {
 
     constructor(connection: WebSocket) {
         console.log('Initialisation')
-
         this.connection = connection
-
         this.functionController = new FunctionController('./src/tools.json');
 
-        this.openAiWs = new WebSocket(OPENAI_WSS, {
-            headers: {
-                Authorization: `Bearer ${OPENAI_API_KEY}`,
-                "OpenAI-Beta": "realtime=v1"
-            }
-        })
+        if (!OPENAI_API_KEY || !LOLAPP_TOKEN || !LOLAPP_COMPANY_KEY) {
+            throw new Error('Please provide OPENAI_API_KEY and LOLAPP_TOKEN in the .env file');
+        }
 
-        // Open Ai Event
-        this.openAiWs.on('open', () => this.initializeSession())
-        this.openAiWs.on('message', (data: string) => this.handleOpenAi(data))
-        this.openAiWs.on('close', () => {
+        const realtimeController = new OpenAiController(OPENAI_WSS, OPENAI_API_KEY)
+        this.realtimeController = realtimeController.initalizeConnection()
+
+        this.realtimeController.on('open', () => this.initializeSession())
+        this.realtimeController.on('message', (data: string) => this.handleOpenAi(data))
+        this.realtimeController.on('close', () => {
             console.log('Disconnected from the OpenAI Realtime API')
         })
-        this.openAiWs.on('error', (error) => {
+        this.realtimeController.on('error', (error) => {
             console.error('Error in the OpenAI WebSocket:', error)
         })
 
-        // Twilio Event
-        this.connection.on('message', (message: string) => this.handleTwilio(message))
+        this.connection.on('message', (message: string) => console.log(message))
         this.connection.on('close', () => {
-            if (this.openAiWs.readyState === WebSocket.OPEN)  this.openAiWs.close()
+            if (this.realtimeController.readyState === WebSocket.OPEN)  this.realtimeController.close()
             console.log('Client disconnected.')
         })
 
@@ -87,7 +93,7 @@ export class BotController {
     }
 
     sendDataToOpenAi(data: SendOpenAiData){
-        this.openAiWs.send(JSON.stringify(data))
+        this.realtimeController.send(JSON.stringify(data))
     }
 
     sendMark() {
@@ -165,7 +171,7 @@ export class BotController {
             switch (data.event) {
                 case 'media':
                     this.latestMediaTimestamp = data.media.timestamp
-                    if (this.openAiWs.readyState === WebSocket.OPEN) {
+                    if (this.realtimeController.readyState === WebSocket.OPEN) {
                         this.sendDataToOpenAi({
                             type: 'input_audio_buffer.append',
                             audio: data.media.payload
